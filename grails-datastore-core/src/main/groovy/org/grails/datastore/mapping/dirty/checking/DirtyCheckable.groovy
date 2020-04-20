@@ -81,7 +81,7 @@ trait DirtyCheckable {
              boolean isNull = newValue == null
             if ((isNull && oldValue != null) ||
                 (!isNull && oldValue == null) ||
-                (!isNull && !newValue.equals(oldValue))) {
+                (!isNull && !newValue.equals(unwrapIfProxy(oldValue)))) {
                 $changedProperties.put propertyName, oldValue
             }
         }
@@ -97,7 +97,7 @@ trait DirtyCheckable {
             boolean isNull = newValue == null
             if ((isNull && oldValue != null) ||
                 (!isNull && oldValue == null) ||
-                (!isNull && !newValue.equals(oldValue))) {
+                (!isNull && !newValue.equals(unwrapIfProxy(oldValue)))) {
                 $changedProperties.put propertyName, oldValue
             }
         }
@@ -131,5 +131,10 @@ trait DirtyCheckable {
         } else {
             return null
         }
+    }
+
+
+    private Object unwrapIfProxy(Object value) {
+        return value instanceof EntityProxy ? ((EntityProxy) value).getTarget() : value
     }
 }
